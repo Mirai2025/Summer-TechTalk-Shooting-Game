@@ -12,9 +12,15 @@ public class PlayerShoot : MonoBehaviour
 
           {
               Destroy (gameObject);   
-          }
-
+          }       
         
-          
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if(gameObject.tag=="Enemy")
+        {
+            Destroy(gameObject);
+           
+        }
     }
 }

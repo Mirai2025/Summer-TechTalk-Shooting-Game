@@ -3,53 +3,50 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    [SerializeField] float _speed = 0.1f;
-    [SerializeField]     private AudioClip _shootSound;
+    [SerializeField] float _speed = 5f;
+
     public GameObject bulletPrefab;
-   
+
+    private Rigidbody2D rb;
+
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        rb.gravityScale = 0f;
+        
+    }
     void Update()
     {
         UpdateMove();
-;    }
+        ClampPosition();
+    }
 
     private void UpdateMove()
     {
-        if(Input.GetKey(KeyCode.A))
+        Vector2 move = Vector2.zero;
 
-        {
-            transform.position +=-Vector3.right * _speed;
 
-        }
+        if (Input.GetKey(KeyCode.A))  move += Vector2.left;      
+        if (Input.GetKey(KeyCode.D)) move += Vector2.right;
+        if (Input.GetKey(KeyCode.W)) move += Vector2.up;
+        if (Input.GetKey(KeyCode.S)) move += Vector2.down;
 
-        if(Input.GetKey(KeyCode.D))
+        rb.linearVelocity = move.normalized * _speed;
 
-        {
-            transform.position += Vector3.right * _speed;
-
-        }
-
-        if(Input.GetKey(KeyCode.W))
-
-        {
-           
-            transform.position += Vector3.up * _speed;
-
-        }
-
-        if(Input.GetKey(KeyCode.S))
-
-        {
-           
-            transform.position +=-Vector3.up * _speed;
-
-        }
 
         if (Input.GetKeyDown(KeyCode.Space))
-        {  
+        {
+            Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+        }       
+    }
+    private void ClampPosition()
+    {
+        Vector3 pos = transform.position;
 
-            Instantiate (bulletPrefab,transform.position, Quaternion.identity);
-             
-        }
+        pos.x = Mathf.Clamp(pos.x, -13f, 13f);
+        pos.y = Mathf.Clamp(pos.y, -8f, 8f);
 
+        transform.position = pos;
     }
 }
